@@ -1,0 +1,58 @@
+{
+  "name": "@someimportantcompany/yoem",
+  "version": "2.0.0",
+  "description": "Your own Oembed tool",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "lint": "eslint .",
+    "start": "node server.js",
+    "test": "istanbul cover _mocha -- test/",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": [
+    "oembed"
+  ],
+  "files": [
+    "src",
+    "index.js"
+  ],
+  "author": "James D <james@jdrydn.com> (https://jdrydn.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/someimportantcompany/yoem"
+  },
+  "bugs": {
+    "url": "https://github.com/someimportantcompany/yoem/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
+    "debug": "^4.1.1",
+    "http-assert": "^1.4.1",
+    "micromatch": "^4.0.2",
+    "ms": "^2.1.2",
+    "statuses": "^1.5.0",
+    "suq": "^1.4.1",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "chai": "^4.2.0",
+    "dotenv": "^6.2.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-mocha": "^5.3.0",
+    "eslint-plugin-sort-requires": "^2.1.0",
+    "express": "^4.17.1",
+    "istanbul": "^1.1.0-alpha.1",
+    "lodash": "^4.17.15",
+    "mocha": "^5.2.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.2"
+  },
+  "engines": {
+    "node": ">= 10.0"
+  }
+}

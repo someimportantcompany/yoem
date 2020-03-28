@@ -1,0 +1,15 @@
+{
+  "env": {
+    "DEBUG": "yoem:*",
+    "NODE_ENV": "development"
+  },
+  "execMap": {
+    "js": "node -r dotenv/config"
+  },
+  "ext": "js json yml",
+  "watch": [
+    "index.js",
+    "server.js",
+    "src/"
+  ]
+}

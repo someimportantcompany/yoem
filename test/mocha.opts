@@ -1,0 +1,4 @@
+--color
+--recursive
+--require dotenv/config
+--exit

@@ -1,0 +1,9 @@
+.git/
+.github/
+bin/
+coverage/
+docs/
+node_modules/
+test/
+*.DS_Store
+*.env
