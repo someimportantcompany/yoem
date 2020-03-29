@@ -1,5 +1,5 @@
 {
-  "name": "@someimportantcompany/yoem",
+  "name": "yoem",
   "version": "2.0.0",
   "description": "Your own Oembed tool",
   "main": "index.js",
