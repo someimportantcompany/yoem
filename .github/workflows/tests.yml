@@ -22,6 +22,6 @@ jobs:
 
       - name: Push Coveralls data
         uses: coverallsapp/github-action@master
-        if: ${{ matrix.node-version }} == '10'
+        if: matrix.node-version == '10'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
