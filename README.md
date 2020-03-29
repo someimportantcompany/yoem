@@ -1,7 +1,5 @@
 <h1 align="center">yoem</h1>
 
-# yoem
-
 [![NPM](https://badge.fury.io/js/yoem.svg)](https://www.npmjs.com/package/yoem)
 [![CI](https://github.com/someimportantcompany/yoem/workflows/tests/badge.svg)](https://github.com/someimportantcompany/yoem/actions)
 [![Coveralls](https://coveralls.io/repos/github/someimportantcompany/yoem/badge.svg?branch=master)](https://coveralls.io/github/someimportantcompany/yoem?branch=master)
