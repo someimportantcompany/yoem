@@ -121,13 +121,12 @@ module.exports = async function fetchData(opts, numRedirects = 0) {
       // key-value format) and consumers may choose to ignore these. Consumers must ignore parameters they do not
       // understand.
 
-      if (_get(parsedData.opengraph, [ 'og:video:secure_url', 'og:video:url' ])) {
+      if (_get(parsedData.opengraph, [ 'og:video:secure_url', 'og:video:url' ]) &&
+        _get(parsedData.opengraph, [ 'og:video:height' ]) && _get(parsedData.opengraph, [ 'og:video:width' ])) {
         // If video_url is present, video_width and video_height should also be present.
-        if (_get(parsedData.opengraph, [ 'og:video:height' ]) && _get(parsedData.opengraph, [ 'og:video:width' ])) {
-          result.video_url = _get(parsedData.opengraph, [ 'og:video:secure_url', 'og:video:url' ]).trim();
-          result.video_height = _get(parsedData.opengraph, 'og:video:height');
-          result.video_width = _get(parsedData.opengraph, 'og:video:width');
-        }
+        result.video_url = _get(parsedData.opengraph, [ 'og:video:secure_url', 'og:video:url' ]).trim();
+        result.video_height = _get(parsedData.opengraph, [ 'og:video:height' ]);
+        result.video_width = _get(parsedData.opengraph, [ 'og:video:width' ]);
       }
 
       // Fallback thumbnail in the case there aren't any relevant tags?

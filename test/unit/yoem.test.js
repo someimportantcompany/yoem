@@ -1,4 +1,5 @@
 const assert = require('assert');
+const defaultServices = require('@src/services');
 const yoem = require('@src/yoem');
 
 describe('src/yoem', () => {
@@ -12,33 +13,86 @@ describe('src/yoem', () => {
     } catch (err) {
       assert.strictEqual(err.message, 'Expected { url } to be a string');
       assert.strictEqual(err.code, 'YOEM_NO_URL');
+      assert.strictEqual(err.status, 400);
+      assert.strictEqual(err.statusMessage, 'Bad Request');
     }
   });
 
-  it('should throw an error if { url } is within the { blacklist }', async () => {
+  it('should throw an error if { services } contains an invalid service', async () => {
     try {
-      await yoem({
-        url: 'https://daringfireball.net/2020/01/the_ipad_awkwardly_turns_10',
-        blacklist: [ 'daringfireball.net/**' ],
-      });
-      this.fail('Should have thrown since { url } is within the { blacklist }');
+      await yoem({ url: 'https://discoverwestworld.com', services: { foo: {} } });
+      this.fail('Should have thrown since { url } is missing');
     } catch (err) {
-      assert.strictEqual(err.message, 'URL "daringfireball.net/2020/01/the_ipad_awkwardly_turns_10" is blacklisted');
-      assert.strictEqual(err.code, 'YOEM_URL_BLACKLISTED');
+      assert.strictEqual(err.code, 'YOEM_MISSING_SERVICE_NAME');
+      assert.strictEqual(err.message, 'Invalid service passed to yoem "foo": Expected name to be a string');
+      assert.strictEqual(err.status, 500);
+      assert.strictEqual(err.statusMessage, 'Internal Server Error');
+      assert.strictEqual(err.url, 'https://discoverwestworld.com');
     }
   });
 
-  it('should throw an error if { url } is not within the { whitelist }', async () => {
+  it('should throw an error if { fallback } throws an error', async () => {
     try {
       await yoem({
-        url: 'https://daringfireball.net/2020/01/the_ipad_awkwardly_turns_10',
-        whitelist: [ 'theverge.com/**' ],
+        url: 'https://discoverwestworld.com',
+        fallback() {
+          throw new Error('THIS DOESN\'T LOOK LIKE ANYTHING TO ME');
+        },
       });
-      this.fail('Should have thrown since { url } is not within the { whitelist }');
+      this.fail('Should have thrown since { url } is missing');
     } catch (err) {
-      assert.strictEqual(err.message, 'URL "daringfireball.net/2020/01/the_ipad_awkwardly_turns_10" is blacklisted');
-      assert.strictEqual(err.code, 'YOEM_URL_BLACKLISTED');
+      assert.strictEqual(err.code, undefined);
+      assert.strictEqual(err.message, 'THIS DOESN\'T LOOK LIKE ANYTHING TO ME');
+      assert.strictEqual(err.status, 500);
+      assert.strictEqual(err.statusMessage, 'Internal Server Error');
+      assert.strictEqual(err.url, 'https://discoverwestworld.com');
     }
+  });
+
+  it('should return the embed data', async () => {
+    const result = await yoem({
+      url: 'https://discoverwestworld.com',
+      services: {
+        ...defaultServices,
+        westworld: {
+          name: 'Westworld',
+          matches: [ 'discoverwestworld.com/**' ],
+          get: () => ({
+            version: '1.0',
+            type: 'link',
+            title: 'Westworld',
+            provider_name: 'Westworld',
+            provider_url: 'https://discoverwestworld.com',
+            description: 'These violent delights have violent ends',
+            thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+          }),
+          url: ({ url }) => `https://discoverwestworld.com/oembed?url=${url}`,
+        },
+      },
+      fallback() {
+        throw new Error('Shouldn\'t attempt a network request');
+      },
+    });
+
+    delete result.embed.fetch_date;
+    delete result.fetchDate;
+    delete result.timeTaken;
+    delete result.timeTaken_ms;
+
+    assert.deepStrictEqual(result, {
+      embed: {
+        type: 'link',
+        version: '1.0',
+        title: 'Westworld',
+        provider_name: 'Westworld',
+        provider_url: 'https://discoverwestworld.com',
+        description: 'These violent delights have violent ends',
+        thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+      },
+      serviceName: 'westworld',
+      url: 'https://discoverwestworld.com',
+      urlCleaned: 'discoverwestworld.com'
+    });
   });
 
 });

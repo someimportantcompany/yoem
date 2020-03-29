@@ -173,7 +173,108 @@ describe('src/fetchData', () => {
     assert.deepStrictEqual(result, data);
   });
 
-  it('should fetch a raw webpage & scrape tags from opengraph tags', async () => {
+  it('should follow a redirect, fetch a raw webpage & redirect to an oembed link', async () => {
+    const data = {
+      version: '1.0',
+      type: 'link',
+      title: 'Westworld',
+      provider_name: 'Westworld',
+      provider_url: 'https://discoverwestworld.com',
+      description: 'These violent delights have violent ends',
+      thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+    };
+
+    const result = await fetchData({
+      url: 'https://discoverwestworld.com',
+      axios: axios.create({
+        adapter(config) {
+          if (config && config.url.includes('/oembed.json')) {
+            return createAxiosAdapter({
+              status: 200,
+              headers: {
+                'content-type': 'application/json; charset=utf-8',
+              },
+              data: JSON.stringify(data),
+            })(config);
+          } else if (config && config.url.includes('/webpage.html')) {
+            return createAxiosAdapter({
+              status: 200,
+              headers: {
+                'content-type': 'text/html; charset=utf-8',
+              },
+              data: getFixture('westworld-links.html'),
+            })(config);
+          } else {
+            return createAxiosAdapter({
+              status: 302,
+              headers: {
+                'content-type': 'text/html; charset=utf-8',
+                'location': 'https://discoverwestworld.com/webpage.html',
+              },
+              data: null,
+            })(config);
+          }
+        },
+      }),
+    });
+    assert.deepStrictEqual(result, {
+      version: '1.0',
+      type: 'link',
+      title: 'Westworld',
+      provider_name: 'Westworld',
+      provider_url: 'https://discoverwestworld.com',
+      description: 'These violent delights have violent ends',
+      thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+    });
+  });
+
+  it('should fetch a raw webpage, find the links & redirect', async () => {
+    const data = {
+      version: '1.0',
+      type: 'link',
+      title: 'Westworld',
+      provider_name: 'Westworld',
+      provider_url: 'https://discoverwestworld.com',
+      description: 'These violent delights have violent ends',
+      thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+    };
+
+    const result = await fetchData({
+      url: 'https://discoverwestworld.com',
+      axios: axios.create({
+        adapter(config) {
+          if (config && config.url.includes('oembed.json')) {
+            return createAxiosAdapter({
+              status: 200,
+              headers: {
+                'content-type': 'application/json; charset=utf-8',
+              },
+              data: JSON.stringify(data),
+            })(config);
+          } else {
+            return createAxiosAdapter({
+              status: 200,
+              headers: {
+                'content-type': 'text/html; charset=utf-8',
+              },
+              data: getFixture('westworld-links.html'),
+            })(config);
+          }
+        },
+      }),
+    });
+    assert.deepStrictEqual(result, {
+      version: '1.0',
+      type: 'link',
+      title: 'Westworld',
+      provider_name: 'Westworld',
+      provider_url: 'https://discoverwestworld.com',
+      description: 'These violent delights have violent ends',
+      thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+    });
+  });
+
+  it('should fetch a raw webpage & scrape data from opengraph tags', async () => {
     const result = await fetchData({
       url: 'https://discoverwestworld.com',
       axios: axios.create({
@@ -197,7 +298,36 @@ describe('src/fetchData', () => {
     });
   });
 
-  it('should fetch a raw webpage & scrape tags from twitter tags', async () => {
+  it('should fetch a raw webpage & scrape video data from opengraph tags', async () => {
+    const result = await fetchData({
+      url: 'https://discoverwestworld.com',
+      axios: axios.create({
+        adapter: createAxiosAdapter({
+          status: 200,
+          headers: {
+            'content-type': 'text/html; charset=utf-8',
+          },
+          data: getFixture('westworld-opengraph-video.html'),
+        }),
+      }),
+    });
+    assert.deepStrictEqual(result, {
+      version: '1.0',
+      type: 'link',
+      title: 'Westworld',
+      provider_name: 'Westworld',
+      provider_url: 'https://discoverwestworld.com',
+      description: 'These violent delights have violent ends',
+      thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+      thumbnail_height: '678',
+      thumbnail_width: '452',
+      video_url: 'https://www.gstatic.com/tv/trailers/17848831/p17848831_b_v8_aa.mp4',
+      video_height: '452',
+      video_width: '678',
+    });
+  });
+
+  it('should fetch a raw webpage & scrape data from twitter tags', async () => {
     const result = await fetchData({
       url: 'https://discoverwestworld.com',
       axios: axios.create({
@@ -221,7 +351,7 @@ describe('src/fetchData', () => {
     });
   });
 
-  it('should fetch a raw webpage & scrape tags from raw meta tags', async () => {
+  it('should fetch a raw webpage & scrape data from raw meta tags', async () => {
     const result = await fetchData({
       url: 'https://discoverwestworld.com',
       axios: axios.create({
@@ -244,7 +374,7 @@ describe('src/fetchData', () => {
     });
   });
 
-  it('should fetch a raw webpage & scrape tags from many tags', async () => {
+  it('should fetch a raw webpage & scrape data from many tags', async () => {
     const result = await fetchData({
       url: 'https://discoverwestworld.com',
       axios: axios.create({
@@ -265,6 +395,29 @@ describe('src/fetchData', () => {
       provider_url: 'https://discoverwestworld.com',
       description: 'These violent delights have violent ends',
       thumbnail_url: 'https://www.gstatic.com/tv/thumb/tvbanners/17848831/p17848831_b_v8_aa.jpg',
+    });
+  });
+
+  it('should fetch a raw webpage & return null if no tags are present', async () => {
+    const result = await fetchData({
+      url: 'https://discoverwestworld.com',
+      axios: axios.create({
+        adapter: createAxiosAdapter({
+          status: 200,
+          headers: {
+            'content-type': 'text/html; charset=utf-8',
+          },
+          data: getFixture('westworld-empty.html'),
+        }),
+      }),
+    });
+    assert.deepStrictEqual(result, {
+      version: '1.0',
+      type: 'link',
+      title: null,
+      provider_name: 'discoverwestworld.com',
+      provider_url: 'https://discoverwestworld.com',
+      description: null,
     });
   });
 

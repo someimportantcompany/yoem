@@ -21,7 +21,7 @@ async function integration(opts) {
   } catch (err) {
     return {
       status: err.status || 500,
-      statusMessage: err.status && err.statusMessage ? err.statusMessage : '500 Internal Server Error',
+      statusMessage: err.status && err.statusMessage ? err.statusMessage : 'Internal Server Error',
       headers: {},
       body: {
         error: {
@@ -140,7 +140,6 @@ module.exports.zeit = function zeit(opts) {
         res.setHeader(key, headers[key]);
       }
     }
-    res.set(headers);
     res.json(body);
   };
 };
@@ -191,12 +190,12 @@ module.exports.awsApiGateway = async (event, context, callback) => {
  * @link https://docs.aws.amazon.com/lambda/latest/dg/services-alb.html
  */
 module.exports.awsApplicationLoadBalancer = async (event, context, callback) => {
-  const { status, statusMessage, headers, body } = await integration({
+  const { status: statusCode, statusMessage, headers, body } = await integration({
     url: ((event || {}).queryStringParameters || {}).url,
     headers: (event || {}).headers || {},
   });
   callback(null, {
-    statusCode: status,
+    statusCode,
     statusMessage,
     headers: {
       'Content-Type': 'application/json',

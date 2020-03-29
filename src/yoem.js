@@ -59,13 +59,14 @@ module.exports = async function yoem({ url, services, fallback, timeout, ...opts
     };
   } catch (err) {
     err.serviceName = serviceName;
-    err.statusMessage = statuses[err.status || 500];
+    err.status = err.status || 500;
+    err.statusMessage = statuses[err.status];
     err.url = url;
     throw err;
   }
 };
 
-function validateService(list, { name, matches, url }, key) {
+function validateService(list, key, { name, matches, get, url }) {
   try {
     assert(typeof name === 'string', new Error('Expected name to be a string'), {
       code: 'YOEM_MISSING_SERVICE_NAME',
@@ -74,14 +75,18 @@ function validateService(list, { name, matches, url }, key) {
       code: 'YOEM_MISSING_SERVICE_MATCHES',
     });
 
-    assert([ 'function', 'string' ].includes(typeof url), new Error('Expected url to be a string or function'), {
+    assert(!url || [ 'function', 'string' ].includes(typeof url), new Error('Expected url to be a string or function'), {
       code: 'YOEM_MISSING_SERVICE_URL',
     });
     assert(typeof url !== 'string' || url.includes('{{url}}'), new Error('Expected url to have {{url}} placeholder'), {
       code: 'YOEM_INVALID_SERVICE_URL',
     });
 
-    list[key] = { name, matches, url };
+    assert(!get || typeof get === 'function', new Error('Expected service.get to be a function'), {
+      code: 'YOEM_INVALID_SERVICE_GETTER',
+    });
+
+    list[key] = { name, matches, get, url };
     return list;
   } catch (err) {
     err.message = `Invalid service passed to yoem "${key}": ${err.message}`;

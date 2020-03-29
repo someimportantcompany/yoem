@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <oembed>
-    <version>1.0</version>
-    <type>rich</type>
-    <html>&lt;iframe height="640" width="360" src="https://play.soundsgood.co/embed/5e7f4b0e623c9d075e835220?" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media" allowtransparency="true">&lt;/iframe></html>
-    <width>640</width>
-    <height>360</height>
-    <title>80s number twos</title>
-    <author_name>Talk About Pop Music</author_name>
-    <author_url>http://talkaboutpopmusic.com</author_url>
-    <provider_name>Soundsgood</provider_name>
-    <provider_url>https://soundsgood.co</provider_url>
-    <thumbnail_url>https://cdn-images.soundsgood.co/w_640,h_360,r_contain,q_100,ch_810,cw_1440,cy2_810,cy_0,cx2_1440,cx_0/13f1cfb9-6913-4461-a121-c65e76c39427_19156_production.jpg</thumbnail_url>
-    <thumbnail_width>640</thumbnail_width>
-    <thumbnail_height>360</thumbnail_height>
+  <version>1.0</version>
+  <type>rich</type>
+  <html>&lt;iframe height="640" width="360" src="https://play.soundsgood.co/embed/5e7f4b0e623c9d075e835220?" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media" allowtransparency="true">&lt;/iframe></html>
+  <width>640</width>
+  <height>360</height>
+  <title>80s number twos</title>
+  <author-name>Talk About Pop Music</author-name>
+  <author-url>http://talkaboutpopmusic.com</author-url>
+  <provider-name>Soundsgood</provider-name>
+  <provider-url>https://soundsgood.co</provider-url>
+  <thumbnail_url>https://cdn-images.soundsgood.co/w_640,h_360,r_contain,q_100,ch_810,cw_1440,cy2_810,cy_0,cx2_1440,cx_0/13f1cfb9-6913-4461-a121-c65e76c39427_19156_production.jpg</thumbnail_url>
+  <thumbnail_width>640</thumbnail_width>
+  <thumbnail_height>360</thumbnail_height>
 </oembed>
