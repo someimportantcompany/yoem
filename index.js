@@ -1,7 +1,9 @@
+const defaultFetchData = require('./src/fetchData');
 const defaultServices = require('./src/services');
 const yoem = require('./src/yoem');
 
 module.exports = yoem;
+module.exports.fetchData = defaultFetchData;
 module.exports.services = defaultServices;
 
 async function integration(opts) {
