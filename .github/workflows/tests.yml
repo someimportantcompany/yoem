@@ -3,6 +3,9 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      NODE_ENV: testing
     strategy:
       matrix:
         node-version: [ '8', '10', '12' ]
@@ -12,9 +15,18 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
     - run: npm ci
     - run: npm run lint
     - run: npm test
-      env:
-        CI: true
-        NODE_ENV: staging
+
+    - name: Push Coveralls data
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel: true
+    - name: Finalise Coveralls data
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
