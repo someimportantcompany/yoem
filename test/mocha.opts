@@ -1,4 +1,5 @@
 --color
 --recursive
 --require dotenv/config
+--require test/bootstrap.js
 --exit

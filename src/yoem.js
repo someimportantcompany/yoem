@@ -6,7 +6,7 @@ const statuses = require('statuses');
 
 const defaultFallback = require('./fetchData');
 const defaultServices = require('./services');
-const { reduceObject } = require('./utils');
+const { cleanUrl, reduceObject } = require('./utils');
 
 module.exports = async function yoem({ url, services, fallback, timeout, ...opts } = {}) {
   let serviceName = null;
@@ -18,14 +18,7 @@ module.exports = async function yoem({ url, services, fallback, timeout, ...opts
     fallback = typeof fallback === 'function' ? fallback : defaultFallback;
     services = services ? reduceObject(services, validateService, {}) : defaultServices;
 
-    const cleaned = url.replace(/^https?:\/\/(www.)?/, '');
-    // Handle a blacklist & whitelist of URLs as early as possible
-    // Deliberately kept within `opts` to pass down the fetchData function
-    assert(!Array.isArray(opts.blacklist) || !micromatch.any(cleaned, opts.blacklist),
-      400, new Error(`URL "${cleaned}" is blacklisted`), { code: 'YOEM_URL_BLACKLISTED', name: 'BlacklistError' });
-    assert(!Array.isArray(opts.whitelist) || micromatch.any(cleaned, opts.whitelist),
-      400, new Error(`URL "${cleaned}" is not whitelisted`), { code: 'YOEM_URL_BLACKLISTED', name: 'BlacklistError' });
-
+    const cleaned = cleanUrl(url);
     serviceName = Object.keys(services).find(key => micromatch.any(cleaned, services[key].matches));
     const service = services[serviceName] || null;
     const fetchDataFn = (service ? service.get : null) || fallback;

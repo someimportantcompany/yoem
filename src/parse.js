@@ -6,9 +6,8 @@ module.exports = {
     contentTypes: [
       'application/json**',
     ],
-    parse(body) {
-      return JSON.parse(body);
-    },
+    // Axios has automatic transforms for JSON!
+    parse: body => body,
   },
 
   xml: {

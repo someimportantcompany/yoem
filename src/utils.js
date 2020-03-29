@@ -1,11 +1,13 @@
 module.exports = {
 
-  _get: function _get(obj, keys, defaults = null) {
+  cleanUrl: (regex => url => url.replace(regex, ''))(/^https?:\/\/(www.)?/),
+
+  _get: function _get(obj, keys, defaults = '') {
     if (obj && Array.isArray(keys) && keys.length) {
       const key = keys.shift();
-      return obj.hasOwnProperty(key) ? obj[key] : _get(obj, keys);
+      return obj.hasOwnProperty(key) ? `${obj[key]}` : _get(obj, keys);
     } else {
-      return defaults;
+      return `${defaults}`;
     }
   },
 
