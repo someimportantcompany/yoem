@@ -1,8 +1,9 @@
-<h1 align="center">yoem</h1>
-
-[![NPM](https://badge.fury.io/js/yoem.svg)](https://www.npmjs.com/package/yoem)
-[![CI](https://github.com/someimportantcompany/yoem/workflows/tests/badge.svg)](https://github.com/someimportantcompany/yoem/actions)
-[![Coveralls](https://coveralls.io/repos/github/someimportantcompany/yoem/badge.svg?branch=master)](https://coveralls.io/github/someimportantcompany/yoem?branch=master)
+<div align="center">
+  <h1>yoem</h1>
+  <a href="https://npm.im/yoem"><img alt="NPM" src="https://badge.fury.io/js/yoem.svg"/></a>
+  <a href="https://github.com/someimportantcompany/yoem/actions"><img alt="CI" src="https://github.com/someimportantcompany/yoem/workflows/tests/badge.svg"/></a>
+  <a href="https://coveralls.io/github/someimportantcompany/yoem?branch=master"><img alt="Coverage" src="https://coveralls.io/repos/github/someimportantcompany/yoem/badge.svg?branch=master"/></a>
+</div>
 
 Unopinionated self-hosted [oembed](https://oembed.com) URL expansion. Drop into your existing [Node.js](https://nodejs.org) application or fire up an independent [Serverless](https://serverless.com) microservice.
 
